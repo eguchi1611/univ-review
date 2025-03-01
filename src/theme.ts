@@ -15,6 +15,11 @@ const theme = createTheme({
     secondary: colors.brown,
   },
   components: {
+    MuiAppBar: {
+      defaultProps: {
+        variant: "outlined",
+      },
+    },
     MuiButtonBase: {
       defaultProps: {
         disableRipple: true,
@@ -23,6 +28,11 @@ const theme = createTheme({
     MuiButton: {
       defaultProps: {
         variant: "contained",
+      },
+    },
+    MuiContainer: {
+      defaultProps: {
+        maxWidth: false,
       },
     },
   },

@@ -32,6 +32,10 @@ const eslintConfig = tseslint.config(
         },
       ],
       "import/consistent-type-specifier-style": ["error", "prefer-top-level"],
+      "@typescript-eslint/consistent-type-imports": [
+        "error",
+        { prefer: "type-imports" },
+      ],
     },
   },
   eslintConfigPrettier,
