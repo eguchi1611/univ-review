@@ -29,6 +29,11 @@ const theme = createTheme({
       defaultProps: {
         variant: "contained",
       },
+      styleOverrides: {
+        root: {
+          textTransform: "none",
+        },
+      },
     },
     MuiContainer: {
       defaultProps: {

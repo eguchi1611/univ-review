@@ -5,13 +5,22 @@ import { AppBar, Box, Button, IconButton, Toolbar } from "@mui/material";
 import Image from "next/image";
 import NextLink from "next/link";
 
-import { openAuthModal } from "@/features/auth/auth-modal-slice";
+import {
+  openAuthModal,
+  setAuthModalType,
+} from "@/features/auth/auth-modal-slice";
 import { useAppDispatch } from "@/lib/hooks";
 
 export function Header() {
   const dispatch = useAppDispatch();
 
-  const handleOpenAuthModal = () => {
+  const handleOpenSignInAuthModal = () => {
+    dispatch(setAuthModalType("signin")); // TODO: ログイン状態を切り替える
+    dispatch(openAuthModal());
+  };
+
+  const handleOpenSignUpAuthModal = () => {
+    dispatch(setAuthModalType("signup")); // TODO: ログイン状態を切り替える
     dispatch(openAuthModal());
   };
 
@@ -36,8 +45,19 @@ export function Header() {
             style={{ height: 24, width: "auto", display: "block" }}
           />
         </Box>
-        <Button variant="text" color="inherit" onClick={handleOpenAuthModal}>
-          Login
+        <Button
+          variant="text"
+          color="inherit"
+          onClick={handleOpenSignInAuthModal}
+        >
+          ログイン
+        </Button>
+        <Button
+          variant="text"
+          color="inherit"
+          onClick={handleOpenSignUpAuthModal}
+        >
+          新規登録
         </Button>
       </Toolbar>
     </AppBar>
