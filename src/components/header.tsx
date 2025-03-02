@@ -1,9 +1,20 @@
+"use client";
+
 import { Menu as MenuIcon } from "@mui/icons-material";
 import { AppBar, Box, Button, IconButton, Toolbar } from "@mui/material";
 import Image from "next/image";
 import NextLink from "next/link";
 
+import { openAuthModal } from "@/features/auth/auth-modal-slice";
+import { useAppDispatch } from "@/lib/hooks";
+
 export function Header() {
+  const dispatch = useAppDispatch();
+
+  const handleOpenAuthModal = () => {
+    dispatch(openAuthModal());
+  };
+
   return (
     <AppBar position="static">
       <Toolbar>
@@ -25,7 +36,7 @@ export function Header() {
             style={{ height: 24, width: "auto", display: "block" }}
           />
         </Box>
-        <Button variant="text" color="inherit">
+        <Button variant="text" color="inherit" onClick={handleOpenAuthModal}>
           Login
         </Button>
       </Toolbar>
