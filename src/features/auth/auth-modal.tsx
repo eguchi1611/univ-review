@@ -13,6 +13,8 @@ import {
   TextField,
 } from "@mui/material";
 
+import { signIn, signUp } from "./actions";
+
 import { closeAuthModal } from "@/features/auth/auth-modal-slice";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks";
 
@@ -79,7 +81,7 @@ export function AuthModal() {
         <Button onClick={handleClose} variant="text" color="inherit">
           閉じる
         </Button>
-        <Button formAction="">
+        <Button formAction={type === "signin" ? signIn : signUp} type="submit">
           {type === "signin" ? "ログイン" : "新規登録"}
         </Button>
       </DialogActions>

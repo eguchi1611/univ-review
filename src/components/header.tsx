@@ -9,20 +9,29 @@ import {
   openAuthModal,
   setAuthModalType,
 } from "@/features/auth/auth-modal-slice";
-import { useAppDispatch } from "@/lib/hooks";
+import { useAppDispatch, useAppSelector } from "@/lib/hooks";
+import { createClient } from "@/utils/supabase/client";
+
+const supabase = createClient();
 
 export function Header() {
   const dispatch = useAppDispatch();
 
   const handleOpenSignInAuthModal = () => {
-    dispatch(setAuthModalType("signin")); // TODO: ログイン状態を切り替える
+    dispatch(setAuthModalType("signin"));
     dispatch(openAuthModal());
   };
 
   const handleOpenSignUpAuthModal = () => {
-    dispatch(setAuthModalType("signup")); // TODO: ログイン状態を切り替える
+    dispatch(setAuthModalType("signup"));
     dispatch(openAuthModal());
   };
+
+  const handleSignOutClick = () => {
+    supabase.auth.signOut();
+  };
+
+  const session = useAppSelector((state) => state.session.session);
 
   return (
     <AppBar position="static">
@@ -45,20 +54,28 @@ export function Header() {
             style={{ height: 24, width: "auto", display: "block" }}
           />
         </Box>
-        <Button
-          variant="text"
-          color="inherit"
-          onClick={handleOpenSignInAuthModal}
-        >
-          ログイン
-        </Button>
-        <Button
-          variant="text"
-          color="inherit"
-          onClick={handleOpenSignUpAuthModal}
-        >
-          新規登録
-        </Button>
+        {session ? (
+          <Button variant="text" color="inherit" onClick={handleSignOutClick}>
+            ログアウト
+          </Button>
+        ) : (
+          <>
+            <Button
+              variant="text"
+              color="inherit"
+              onClick={handleOpenSignInAuthModal}
+            >
+              ログイン
+            </Button>
+            <Button
+              variant="text"
+              color="inherit"
+              onClick={handleOpenSignUpAuthModal}
+            >
+              新規登録
+            </Button>
+          </>
+        )}
       </Toolbar>
     </AppBar>
   );
