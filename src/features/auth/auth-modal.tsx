@@ -5,6 +5,7 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
+  DialogContentText,
   DialogTitle,
   Divider,
   FormControl,
@@ -12,6 +13,9 @@ import {
   Stack,
   TextField,
 } from "@mui/material";
+import { useActionState } from "react";
+import GoogleOriginalIcon from "react-devicons/google/original";
+import TwitterOriginalIcon from "react-devicons/twitter/original";
 
 import { signIn, signUp } from "./actions";
 
@@ -25,19 +29,27 @@ export function AuthModal() {
     dispatch(closeAuthModal());
   };
 
+  const [error, formAction, pending] = useActionState(
+    type === "signin" ? signIn : signUp,
+    {},
+  );
+
   return (
     <Dialog
       open={open}
       onClose={handleClose}
       fullWidth
       slotProps={{
-        paper: {
-          component: "form",
-        },
+        paper: { component: "form" },
       }}
     >
       <DialogTitle>{type === "signin" ? "ログイン" : "新規登録"}</DialogTitle>
       <DialogContent>
+        {error.message && (
+          <DialogContentText color="error" mb={2} whiteSpace="pre-wrap">
+            {error.message}
+          </DialogContentText>
+        )}
         <Stack spacing={2}>
           <FormControl>
             <FormLabel htmlFor="email">メールアドレス</FormLabel>
@@ -50,6 +62,10 @@ export function AuthModal() {
               autoFocus
               required
               fullWidth
+              error={!!error.fieldErrors?.email}
+              helperText={error.fieldErrors?.email
+                ?.map((error) => error.message)
+                .join("\n")}
             />
           </FormControl>
           <FormControl>
@@ -64,15 +80,29 @@ export function AuthModal() {
               required
               fullWidth
               placeholder="********"
+              error={!!error.fieldErrors?.password}
+              helperText={error.fieldErrors?.password
+                ?.map((error) => error.message)
+                .join("\n")}
             />
           </FormControl>
         </Stack>
         <Divider sx={{ my: 2 }}>もしくは</Divider>
         <Stack spacing={2}>
-          <Button variant="outlined" color="inherit" fullWidth>
+          <Button
+            variant="outlined"
+            color="inherit"
+            fullWidth
+            startIcon={<GoogleOriginalIcon />}
+          >
             Googleで続ける
           </Button>
-          <Button variant="outlined" color="inherit" fullWidth>
+          <Button
+            variant="outlined"
+            color="inherit"
+            fullWidth
+            startIcon={<TwitterOriginalIcon />}
+          >
             Twitterで続ける
           </Button>
         </Stack>
@@ -81,7 +111,7 @@ export function AuthModal() {
         <Button onClick={handleClose} variant="text" color="inherit">
           閉じる
         </Button>
-        <Button formAction={type === "signin" ? signIn : signUp} type="submit">
+        <Button type="submit" formAction={formAction} disabled={pending}>
           {type === "signin" ? "ログイン" : "新規登録"}
         </Button>
       </DialogActions>
