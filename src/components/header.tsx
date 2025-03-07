@@ -1,37 +1,16 @@
-"use client";
-
 import { Menu as MenuIcon } from "@mui/icons-material";
 import { AppBar, Box, Button, IconButton, Toolbar } from "@mui/material";
 import Image from "next/image";
 import NextLink from "next/link";
 
-import {
-  openAuthModal,
-  setAuthModalType,
-} from "@/features/auth/auth-modal-slice";
-import { useAppDispatch, useAppSelector } from "@/lib/hooks";
-import { createClient } from "@/utils/supabase/client";
+import { signOut } from "@/features/auth/actions";
+import { createClient } from "@/utils/supabase/server";
 
-const supabase = createClient();
-
-export function Header() {
-  const dispatch = useAppDispatch();
-
-  const handleOpenSignInAuthModal = () => {
-    dispatch(setAuthModalType("signin"));
-    dispatch(openAuthModal());
-  };
-
-  const handleOpenSignUpAuthModal = () => {
-    dispatch(setAuthModalType("signup"));
-    dispatch(openAuthModal());
-  };
-
-  const handleSignOutClick = () => {
-    supabase.auth.signOut();
-  };
-
-  const session = useAppSelector((state) => state.session.session);
+export async function Header() {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
 
   return (
     <AppBar position="static">
@@ -52,25 +31,30 @@ export function Header() {
             width={349}
             height={45}
             style={{ height: 24, width: "auto", display: "block" }}
+            priority
           />
         </Box>
-        {session ? (
-          <Button variant="text" color="inherit" onClick={handleSignOutClick}>
-            ログアウト
-          </Button>
+        {user ? (
+          <form action={signOut}>
+            <Button variant="text" color="inherit" type="submit">
+              ログアウト
+            </Button>
+          </form>
         ) : (
           <>
             <Button
               variant="text"
               color="inherit"
-              onClick={handleOpenSignInAuthModal}
+              component={NextLink}
+              href="/signin"
             >
               ログイン
             </Button>
             <Button
               variant="text"
               color="inherit"
-              onClick={handleOpenSignUpAuthModal}
+              component={NextLink}
+              href="/signup"
             >
               新規登録
             </Button>

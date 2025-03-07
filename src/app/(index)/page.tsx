@@ -1,7 +1,5 @@
 import { Button } from "@mui/material";
 
-import { Sample } from "./sample";
-
 import { createClient } from "@/utils/supabase/server";
 
 export default async function IndexPage() {
@@ -15,7 +13,6 @@ export default async function IndexPage() {
       <p>Hello, {data.user?.email}</p>
       <div>
         <Button>Hello</Button>
-        <Sample />
       </div>
     </div>
   );

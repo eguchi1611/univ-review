@@ -1,13 +1,11 @@
 import { configureStore } from "@reduxjs/toolkit";
 
-import authModalReducer from "../features/auth/auth-modal-slice";
-import sessionReducer from "../features/auth/session-slice";
+import { sampleSlice } from "./sample-slice";
 
 export const makeStore = () => {
   return configureStore({
     reducer: {
-      authModal: authModalReducer,
-      session: sessionReducer,
+      sample: sampleSlice.reducer,
     },
   });
 };
