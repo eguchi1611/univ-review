@@ -1,6 +1,6 @@
 "use server";
 
-import type { AuthError } from "@supabase/supabase-js";
+import type { AuthError, Provider } from "@supabase/supabase-js";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { z } from "zod";
@@ -8,6 +8,19 @@ import { z } from "zod";
 import { createClient } from "@/utils/supabase/server";
 
 import "@/lib/zod-setup";
+
+export async function signInWithProvider(provider: Provider) {
+  const supabase = await createClient();
+  const { data } = await supabase.auth.signInWithOAuth({
+    provider,
+    options: {
+      redirectTo: "http://localhost:3000/auth/callback",
+    },
+  });
+  if (data.url) {
+    redirect(data.url);
+  }
+}
 
 export async function signOut() {
   const supabase = await createClient();
